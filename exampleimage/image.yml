@@ -1,0 +1,21 @@
+base: smokeontheledge.png
+parts:
+- name: "water"
+  position: [20,350,170]
+  values:
+   - water_low.png
+   - water_high.png
+- name: "flag"
+  position: [260,140,120]
+  values:
+   - flag_austria.png
+   - flag_russia.png
+   - flag_polandlithuania.png
+   - flag_bavaria.png
+   - flag_switzerland.png
+- name: "weather"
+  position: [300,250,200]
+  values:
+   - weather_fog.png
+   - weather_rain.png
+   - weather_night.png

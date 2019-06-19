@@ -1,0 +1,129 @@
+
+<html>
+<head>
+	<title>LGCF</title>
+</head>
+
+<script type="text/javascript" >
+	
+	function next(part) {
+		var images = document.getElementsByClassName("imgcat_" + part);
+
+		var toggle = false;
+		for (let i of images) {
+			if (toggle) {
+				i.classList.remove("hide");
+				return
+			}
+			if (!i.classList.contains("hide")) {
+				toggle = true;
+				i.classList.add("hide");
+			}
+		}
+		// if toggle true at the end, last one was shown, so do nothing (show base again)
+		// if toggle false at the end, everything was hidden, so show first
+		if (!toggle) {
+			images[0].classList.remove("hide");
+		}
+
+	}
+	function prev(part) {
+		var images = document.getElementsByClassName("imgcat_" + part);
+		images = Array.from(images)
+		images.reverse()
+
+		var toggle = false;
+		for (let i of images) {
+			if (toggle) {
+				i.classList.remove("hide");
+				return
+			}
+			if (!i.classList.contains("hide")) {
+				toggle = true;
+				i.classList.add("hide");
+			}
+		}
+		// if toggle true at the end, last one was shown, so do nothing (show base again)
+		// if toggle false at the end, everything was hidden, so show first
+		if (!toggle) {
+			images[0].classList.remove("hide");
+		}
+
+	}
+
+</script>
+
+<pyhp>
+	import yaml
+	image = "exampleimage"
+	with open(image + "/image.yml") as f:
+		data = yaml.safe_load(f.read())
+
+	from PIL import Image
+
+	im = Image.open(image + '/' + data['base'])
+	width, height = im.size
+	scale = 900 / height
+</pyhp>
+
+<style>
+	body {
+		font-family:Calibri;
+		font-weight:bold;
+		cursor: default;
+	}
+	.image_container {
+		position:relative;
+		height:<pyhp echo="height * scale" />;
+		width:<pyhp echo="width * scale" />;
+	}
+	.image_container img {
+		z-index:-10000;
+		position:absolute;
+		height:900px;
+	}
+	.buttons {
+		z-index:20000;
+	}
+	.hide {
+		display:none;
+	}
+	span.nav {
+		position:absolute;
+		z-index:20000;
+		font-size:100px;
+		cursor:pointer;
+		display:none;
+		text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+		user-select:none;
+	}
+	div.image_container:hover span.nav {
+		display:inline;
+	}
+</style>
+
+<body>
+	<div class="image_container">
+		<img src="{image}/{data['base']}" />
+
+		<pyhp for="category" in="data['parts']">
+			<pyhp for="option" in="category['values']">
+				<img class="imgcat_{category['name']} hide" src="{image}/{option}" />
+			</pyhp>
+
+			<span class="nav"
+				onclick="prev('{category['name']}')"
+				style="top:{category['position'][1]*scale};left:{category['position'][0]*scale}"
+			>&lt;</span>
+
+			<span class="nav"
+				onclick="next('{category['name']}')"
+				style="top:{category['position'][1]*scale};left:{category['position'][0]*scale + category['position'][2]*scale}"
+			>&gt;</span>
+		</pyhp>
+
+
+	</div>
+
+</body>
+</html>
